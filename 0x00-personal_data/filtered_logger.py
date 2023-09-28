@@ -6,6 +6,8 @@ a log on the screen
 from typing import List
 import logging
 import re
+import os
+import mysql.connector
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -49,3 +51,18 @@ def get_logger() -> logging.Logger:
     stream_handler = logging.StreamHandler(formater)
     logger.addHandler(stream_handler)
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    is a function that returns a mysql connection
+    to a particular server with the mentionned credentials
+    """
+    user_name = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
+    passwd = os.environ.get('PERSONAL_DATA_DB_PASSWORD', '')
+    host_name = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
+    db_name = os.environ.get('PERSONAL_DATA_DB_NAME')
+    connection = mysql.connector.connect(host=host_name,
+                                         user=user_name,
+                                         password=passwd, database=db_name)
+    return connection

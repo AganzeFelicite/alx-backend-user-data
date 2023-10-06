@@ -14,28 +14,51 @@ class Auth:
     """
     this is an auth class
     """
-    def require_auth(self,
-                     path: str,
-                     excluded_paths: List[str]
-                     ) -> bool:
-        """
-        requires auth
-        """
+    # def require_auth(self,
+    #                  path: str,
+    #                  excluded_paths: List[str]
+    #                  ) -> bool:
+    #     """
+    #     requires auth
+    #     """
+    #     if path is None:
+    #         return True
+
+    #     if excluded_paths is None or len(excluded_paths) == 0:
+    #         return True
+
+    #     if path[-1] != "/":
+    #         path = path + "/"
+    #     for patterns in excluded_paths:
+    #         if path[-1] == "*":
+    #             if patterns.startswith(path[0:-1]):
+    #                 return False
+    #         if path == patterns:
+    #             return False
+    #     return True
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
+        """ require auth function that returns false"""
+        if excluded_paths and path:
+            if path[-1] == '/':
+                new_path = path[:-1]
+            else:
+                new_path = path
+            new_excluded_path = []
+            for element in excluded_paths:
+                if element[-1] == '/':
+                    new_excluded_path.append(element[:-1])
+                if element[-1] == '*':
+                    if new_path.startswith(element[:-1]):
+                        return False
+
+            if new_path not in new_excluded_path:
+                return True
+            else:
+                return False
         if path is None:
             return True
-
-        if excluded_paths is None or len(excluded_paths) == 0:
+        if not excluded_paths:
             return True
-
-        if path[-1] != "/":
-            path = path + "/"
-        for patterns in excluded_paths:
-            if path[-1] == "*":
-                if patterns.startswith(path[0:-1]):
-                    return False
-            if path == patterns:
-                return False
-        return True
 
     def authorization_header(self, request=None) -> str:
         """

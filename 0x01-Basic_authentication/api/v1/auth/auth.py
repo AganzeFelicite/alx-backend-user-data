@@ -31,7 +31,7 @@ class Auth:
             path = path + "/"
         for patterns in excluded_paths:
             if path[-1] == "*":
-                if patterns.startswith(path[:-1]):
+                if patterns.startswith(path[0:-1]):
                     return False
             if path == patterns:
                 return False

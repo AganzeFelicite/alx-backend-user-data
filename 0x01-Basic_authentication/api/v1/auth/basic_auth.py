@@ -11,10 +11,9 @@ class BasicAuth(Auth):
     doing nothing for
     now
     """
-    def extract_base64_authorization_header(
-        self,
-        authorization_header: str
-        ) -> str:
+    def extract_base64_authorization_header(self,
+                                            authorization_header: str
+                                            ) -> str:
         """
         this this is to convert to 64bytes
         encoded data format
@@ -25,5 +24,4 @@ class BasicAuth(Auth):
             return None
         if not authorization_header.startswith("Basic "):
             return None
-        return authorization_header[5:]
-      
+        return authorization_header[6:]

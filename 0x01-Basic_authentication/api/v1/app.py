@@ -55,7 +55,7 @@ def before_request():
                       '/api/v1/forbidden/'
                       ]
     flag = auth.require_auth(url_path, authorized_url)
-    if flag:
+    if flag and auth:
         if auth.authorization_header(request) is None:
             abort(401)
         if auth.current_user(request) is None:

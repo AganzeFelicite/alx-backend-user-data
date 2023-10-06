@@ -2,6 +2,7 @@
 """
 Route module for the API
 """
+from api.v1.auth.auth import Auth
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
@@ -12,6 +13,10 @@ import os
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+auth = None
+
+if os.getenv("AUTH_TYPE") == "auth":
+    auth = Auth()
 
 
 @app.errorhandler(404)
@@ -36,6 +41,25 @@ def forbidden(error) -> str:
     request
     """
     return jsonify({"error": "Forbidden"}), 403
+
+
+@app.before_request
+def before_request():
+    """
+    this is a function that will be running before each
+    requests
+    """
+    url_path = request.path
+    authorized_url = ['/api/v1/status/',
+                      '/api/v1/unauthorized/',
+                      '/api/v1/forbidden/'
+                      ]
+    flag = auth.require_auth(url_path, authorized_url)
+    if flag:
+        if auth.authorization_header(request) is None:
+            abort(401)
+        if auth.current_user(request) is None:
+            abort(403)
 
 
 if __name__ == "__main__":

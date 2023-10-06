@@ -56,9 +56,9 @@ def before_request():
                       ]
     flag = auth.require_auth(url_path, authorized_url)
     if flag and auth:
-        if auth.authorization_header(request) is None:
+        if not auth.authorization_header(request):
             abort(401)
-        if auth.current_user(request) is None:
+        if not auth.current_user(request):
             abort(403)
 
 

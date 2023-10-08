@@ -17,12 +17,16 @@ def login():
     email = request.form.get("email")
     passwd = request.form.get("password")
 
-    if email is None:
+    # if email is None:
+    #     return jsonify({"error": "email missing"}), 400
+    if email is None or len(email.strip()) == 0:
         return jsonify({"error": "email missing"}), 400
-    if passwd is None:
+    if passwd is None or len(passwd.strip()) == 0:
         return jsonify({"error": "password missing"}), 400
-
-    users = User.search({"email": email})
+    try:
+        users = User.search({"email": email})
+    except Exception:
+        return jsonify({"error": "no user found for this email"}), 404
     if len(users) <= 0:
         return jsonify({"error": "no user found for this email"}), 404
     if users[0].is_valid_password(passwd):

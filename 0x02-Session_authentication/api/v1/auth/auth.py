@@ -84,9 +84,12 @@ class Auth:
         a method that returns a cookies values from
         the request
         """
-        if request is None:
-            return None
-        _my_session_id = os.getenv("SESSION_NAME")
-        if _my_session_id is not None:
-            return request.cookies.get(_my_session_id)
-        return None
+        # if request is None:
+        #     return None
+        # _my_session_id = os.getenv("SESSION_NAME")
+        # if _my_session_id is not None:
+        #     return request.cookies.get(_my_session_id)
+        # return None
+        if request is not None:
+            cookie_name = os.getenv('SESSION_NAME')
+            return request.cookies.get(cookie_name)

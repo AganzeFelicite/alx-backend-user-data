@@ -8,6 +8,7 @@ authentication
 from flask import request
 from typing import List, TypeVar
 from models.user import User
+import os
 
 
 class Auth:
@@ -76,4 +77,16 @@ class Auth:
         this returns the current loggin
         user
         """
+        return None
+
+    def session_cookie(self, request=None):
+        """
+        a method that returns a cookies values from
+        the request
+        """
+        if request is None:
+            return None
+        _my_session_id = os.getenv("SESSION_NAME")
+        if _my_session_id is not None:
+            return request.cookies.get(_my_session_id)
         return None

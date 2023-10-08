@@ -61,19 +61,24 @@ def before_request():
                       '/api/v1/forbidden/',
                       '/api/v1/auth_session/login/'
                       ]
-    flag = auth.require_auth(url_path, authorized_url)
-    if flag and auth:
-        if not auth.authorization_header(request):
+    # flag = auth.require_auth(url_path, authorized_url)
+    # if flag and auth:
+    #     if not auth.authorization_header(request):
+    #         abort(401)
+    #     request.current_user = auth.current_user(request)
+    #     if not request.current_user:
+    #         abort(403)
+    #     # if auth.authorization_header(request) and \
+    #     #     auth.session_cookie(request):
+    #     #         abort(401)
+    if auth.require_auth(request.path, authorized_url):
+        user = auth.current_user(request)
+        if auth.authorization_header(request) is None and \
+                auth.session_cookie(request) is None:
             abort(401)
-        request.current_user = auth.current_user(request)
-        if not request.current_user:
+        if user is None:
             abort(403)
-        # if auth.authorization_header(request) and \
-        #     auth.session_cookie(request):
-        #         abort(401)
-        if auth.authorization_header(request) and \
-                auth.session_cookie(request):
-            abort(401)
+        request.current_user = user
 
 
 if __name__ == "__main__":

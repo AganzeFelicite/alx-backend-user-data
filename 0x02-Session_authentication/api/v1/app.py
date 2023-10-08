@@ -5,6 +5,7 @@ Route module for the API
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
@@ -23,6 +24,8 @@ if auth_method == "basic_auth":
     auth = BasicAuth()
 if auth_method == 'session_auth':
     auth = SessionAuth()
+if auth_method == "session_exp_auth":
+    auth = SessionExpAuth()
 
 
 @app.errorhandler(404)

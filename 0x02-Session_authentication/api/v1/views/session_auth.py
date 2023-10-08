@@ -34,6 +34,6 @@ def login():
         from api.v1.app import auth
         session_id = auth.create_session(getattr(users[0], 'id'))
         user = jsonify(users[0].to_json())
-        user.set_cookie(os.getenv.get("SESSION_NAME"), session_id)
+        user.set_cookie(os.getenv("SESSION_NAME"), session_id)
         return user
     return jsonify({"error": "wrong password"}), 401

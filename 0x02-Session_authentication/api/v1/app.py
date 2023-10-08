@@ -4,6 +4,7 @@ Route module for the API
 """
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
@@ -15,11 +16,13 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
-
-if getenv("AUTH_TYPE") == "auth":
+auth_method = getenv("AUTH_TYPE")
+if auth_method == "auth":
     auth = Auth()
-elif getenv("AUTH_TYPE") == "basic_auth":
+if auth_method == "basic_auth":
     auth = BasicAuth()
+if auth_method == 'session_auth':
+    auth = SessionAuth()
 
 
 @app.errorhandler(404)
@@ -61,7 +64,8 @@ def before_request():
     if flag and auth:
         if not auth.authorization_header(request):
             abort(401)
-        if not auth.current_user(request):
+        request.current_user = auth.current_user(request)
+        if not request.current_user:
             abort(403)
 
 

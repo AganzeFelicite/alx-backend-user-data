@@ -7,7 +7,7 @@ from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from api.v1.auth.session_db_auth import SessionDBAuth
-vv
+
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
@@ -30,7 +30,7 @@ if auth_method == "session_exp_auth":
     auth = SessionExpAuth()
 if auth_method == "session_db_auth":
     auth = SessionDBAuth()
-    
+
 
 @app.errorhandler(404)
 def not_found(error) -> str:
